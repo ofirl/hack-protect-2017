@@ -104,7 +104,7 @@ public class Main {
     public ResponseEntity<String> crawl(@RequestBody String json, @RequestHeader(value="HOST") String host) {
         System.out.println("Received POST request:" + json);
         System.out.println("Received POST request from:" + host);
-        Map<Integer, Article> request = decodeJson(json);
+        Map<Integer, Article> request = decodeJson(decodeUrl(json));
         DatabaseHandler.processCrawlRequest(request, host);
 
         HttpHeaders responseHeaders = new HttpHeaders();
@@ -158,4 +158,12 @@ public class Main {
             return null;
         }
     }
+
+    private static String decodeUrl(String input) {
+        try {
+            return java.net.URLDecoder.decode(input, "UTF-8");
+        }
+        catch (Exception e) {
+            return "";
+        }
 }
