@@ -2,6 +2,7 @@ package Database;
 
 import DataClasses.*;
 
+import java.sql.ResultSet;
 import java.util.*;
 
 public class DatabaseHandler {
@@ -30,7 +31,9 @@ public class DatabaseHandler {
 
     // will search the db for titles with the same words in the same order
     // will return <found title length> / <title length>
-    public static float[] searchTitle(String[] title) {
+    public static double[] searchTitle(String[] title) {
+        ResultSet rs = SqlHandler.select("Titles", new String [] {"headline"}, "headline LIKE");
+
         return null;
     }
 
