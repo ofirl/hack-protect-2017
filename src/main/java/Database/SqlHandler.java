@@ -15,7 +15,7 @@ public class SqlHandler {
         setValues = setValues.substring(0,setValues.length()-1);
         ResultSet rs = stmt.executeQuery("UPDATE" + table + "SET" + setValues + "WHERE" + condition);
       } catch (Exception e) {
-        
+
       }
     }
 
@@ -32,7 +32,7 @@ public class SqlHandler {
             tvalues = tvalues.substring(0,tvalues.length()-1) + ")";
             ResultSet rs = stmt.executeQuery("INSERT INTO" + table + tcolumns + "VALUES" + tvalues);
           } catch (Exception e) {
-            
+
           }
 
     }
@@ -42,7 +42,7 @@ public class SqlHandler {
             Statement stmt = connection.createStatement();
             ResultSet rs = stmt.executeQuery("DELETE FROM" + table + "WHERE" + condition);
           } catch (Exception e) {
-            
+
           }
 
     }
@@ -56,7 +56,7 @@ public class SqlHandler {
             columns = columns.substring(0,columns.length()-1);
             ResultSet rs = stmt.executeQuery("SELECT" + columns + "FROM" + table + "WHERE" + condition);
           } catch (Exception e) {
-            
+
           }
     }
 }
