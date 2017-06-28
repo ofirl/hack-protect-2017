@@ -48,7 +48,7 @@ public class SqlHandler {
 
     }
 
-    public static void select(String table, String[] fields, String condition) {
+    public static ResultSet select(String table, String[] fields, String condition) {
         try (Connection connection = Main.dataSource.getConnection()) {
             Statement stmt = connection.createStatement();
             String columns = "";
@@ -56,8 +56,9 @@ public class SqlHandler {
             	columns = columns + field + ",";
             columns = columns.substring(0,columns.length()-1);
             ResultSet rs = stmt.executeQuery("SELECT" + columns + "FROM" + table + "WHERE" + condition);
+            return rs;
           } catch (Exception e) {
-
+               return null;
           }
     }
 }
