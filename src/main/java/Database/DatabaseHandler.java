@@ -51,10 +51,13 @@ public class DatabaseHandler {
         return rs.getInt("id");
     }
 
-    public static HeadlineSites getHeadlineSiteDetails(int id) {
+    public static HeadlineSites getHeadlineSiteDetails(int id) throws SQLException{
         // TODO : do...
-        HeadlineSites headline = new HeadlineSites();
-        return new HeadlineSites() {};
+        ResultSet rs = SqlHandler.select("headlineTitles", new String[] {"id","url","reportersCount"}, "id = " + id);
+        rs.next();
+        HeadlineSites headline = new HeadlineSites(rs.getInt("id"),rs.getString("url"),rs.getInt("reportersCount"));
+
+        return headline;
     }
 
     public static void updateTitle(int id, int reportersCount) {
@@ -120,14 +123,14 @@ public class DatabaseHandler {
         return output;
     }
 
-    public static String processMarkRequest(Article request, String domain) {
+    public static String processMarkRequest(Article request, String domain) throws SQLException{
         request.headline = StemmerAPI.cleanHeadline(request.headline);
         request.sub_headline = StemmerAPI.cleanHeadline(request.sub_headline);
 
         double[] similarSearch = searchTitle(request.headline.split(" "), true);
         if (similarSearch[0] > minIdentityScore) {
             int similarHeadline = (int)similarSearch[1];
-            int reporters = getHeadlineSiteDetails(similarHeadline).reportersCount + 1;
+            int reporters = getHeadlineSiteDetails(similarHeadline).getReportersCount() + 1;
             updateTitle(similarHeadline, reporters);
         }
         else {
