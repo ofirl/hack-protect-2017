@@ -35,7 +35,7 @@ public class DatabaseHandler {
     // will return <found title length> / <title length>
     public static Map<String,Double> searchTitle(String[] title) throws SQLException {
         HashMap<String, Double> values = new HashMap<>();
-        ResultSet rs = SqlHandler.select("Titles", new String[]{"id", "headline"}, "headline LIKE");
+        ResultSet rs = SqlHandler.select("Titles", new String[]{"id", "headline"}, "");
         double max = 0;
         String id = "";
         while(rs.next()) {
