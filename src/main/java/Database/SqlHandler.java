@@ -25,11 +25,11 @@ public class SqlHandler {
             Statement stmt = connection.createStatement();
             String tcolumns = "(";
             String tvalues = "(";
-            for(String key: values.keySet())
-            	tcolumns = tcolumns + key + ",";
+            for(String key: values.keySet()) {
+                tcolumns = tcolumns + key + ",";
+                tvalues = tvalues + values.get(key) + ",";
+            }
             tcolumns = tcolumns.substring(0,tcolumns.length()-1) + ")";
-            for(String key: values.keySet())
-            	tvalues = tvalues + values.get(key) + ",";
             tvalues = tvalues.substring(0,tvalues.length()-1) + ")";
             ResultSet rs = stmt.executeQuery("INSERT INTO" + table + tcolumns + "VALUES" + tvalues);
           } catch (Exception e) {
