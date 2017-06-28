@@ -13,13 +13,24 @@ public class DatabaseHandler {
 
     public static void insertTitle(String title, String subTitle, String Url) {
         HashMap<String, String> values = new HashMap<>();
-        String headlineValue = "";
+        String headlineValue = "{";
         String[] headlineArray = title.split(" ");
-        List<String> test = new ArrayList<>();
+        for (String s :
+                headlineArray) {
+            headlineValue += "\"" + s + "\"";
+        }
+        headlineValue += "}";
+        values.put("headline", headlineValue);
 
+        headlineValue = "{";
+        headlineArray = subTitle.split(" ");
+        for (String s :
+                headlineArray) {
+            headlineValue += "\"" + s + "\"";
+        }
+        headlineValue += "}";
+        values.put("sub_headline", headlineValue);
 
-        values.put("headline", title);
-        values.put("sub_headline", subTitle);
         // add to db
         SqlHandler.insert("headlines", values);
 
@@ -27,6 +38,7 @@ public class DatabaseHandler {
         // TODO : get headline id
         values.put("headline_id", String.valueOf(1));
         values.put("domain", Url);
+
         // add to db
         SqlHandler.insert("headlines_sites", values);
     }
