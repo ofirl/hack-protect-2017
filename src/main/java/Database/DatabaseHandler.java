@@ -13,7 +13,7 @@ public class DatabaseHandler {
     public static double minIdentityScore = 0.5;
     public static double minReliabilityScore = 0.5;
 
-    public static void insertTitle(String title, String subTitle, String Url) {
+    public static void insertTitle(String title, String Url) {
         HashMap<String, String> values = new HashMap<>();
         String headlineValue = "{";
         String[] headlineArray = title.split(" ");
@@ -23,15 +23,6 @@ public class DatabaseHandler {
         }
         headlineValue += "}";
         values.put("headline", headlineValue);
-
-        headlineValue = "{";
-        headlineArray = subTitle.split(" ");
-        for (String s :
-                headlineArray) {
-            headlineValue += "\"" + s + "\"";
-        }
-        headlineValue += "}";
-        values.put("sub_headline", headlineValue);
 
         // add to db
         SqlHandler.insert("headlines", values);
@@ -103,14 +94,13 @@ public class DatabaseHandler {
             Article article = request.get((key));
 
             article.headline = StemmerAPI.cleanHeadline(article.headline);
-            article.sub_headline = StemmerAPI.cleanHeadline(article.sub_headline);
 
             double[] similarSearch = searchTitle(article.headline.split(" "), true);
             if (similarSearch[0] < minReliabilityScore) {
                 suspicious.add(key);
             }
             else {
-                insertTitle(article.headline, article.sub_headline, domain);
+                insertTitle(article.headline, domain);
             }
         }
         
@@ -125,7 +115,6 @@ public class DatabaseHandler {
 
     public static String processMarkRequest(Article request, String domain) throws SQLException{
         request.headline = StemmerAPI.cleanHeadline(request.headline);
-        request.sub_headline = StemmerAPI.cleanHeadline(request.sub_headline);
 
         double[] similarSearch = searchTitle(request.headline.split(" "), true);
         if (similarSearch[0] > minIdentityScore) {
@@ -134,7 +123,7 @@ public class DatabaseHandler {
             updateTitle(similarHeadline, reporters);
         }
         else {
-            insertTitle(request.headline, request.sub_headline, domain);
+            insertTitle(request.headline, domain);
         }
 
         return "";
