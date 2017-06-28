@@ -127,6 +127,7 @@ public class Main {
     @Bean
     public static DataSource dataSource() {
         try {
+            System.out.println(dbUrl);
             if (dbUrl == null || dbUrl.isEmpty()) {
                 return new HikariDataSource();
             } else {
