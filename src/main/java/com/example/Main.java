@@ -39,10 +39,10 @@ import java.util.Map;
 public class Main {
 
   @Value("${spring.datasource.url}")
-  private String dbUrl;
+  private static String dbUrl;
 
   @Autowired
-  private DataSource dataSource;
+  public static DataSource dataSource;
 
   public static void main(String[] args) throws Exception {
     SpringApplication.run(Main.class, args);
@@ -81,7 +81,7 @@ public class Main {
   }
 
   @Bean
-  public DataSource dataSource() throws SQLException {
+  public static DataSource dataSource() throws SQLException {
     if (dbUrl == null || dbUrl.isEmpty()) {
       return new HikariDataSource();
     } else {
