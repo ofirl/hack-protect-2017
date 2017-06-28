@@ -16,6 +16,8 @@
 
 package com.example;
 
+import DataClasses.Article;
+import Database.DatabaseHandler;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,14 +26,19 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.sql.DataSource;
+import java.io.Console;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 @Controller
@@ -74,11 +81,27 @@ public class Main {
     }
   }
 
-  @RequestMapping("/test")
-  String test(Map<String, Object> model) {
-    model.put("message", "test");
-    return "test";
-  }
+    @RequestMapping("/test")
+    String test(Map<String, Object> model) {
+      model.put("message", "test");
+      return "test";
+    }
+
+    @RequestMapping(value = "/crawl", method = RequestMethod.POST)
+    public String crawl(@RequestParam("json") String json, @RequestHeader(value="HOST") String host) {
+        System.out.println("Received POST request:" + json);
+        DatabaseHandler.processCrawlRequest(decodeJson(json), host);
+
+        return null;
+    }
+
+    @RequestMapping(value = "/mark", method = RequestMethod.POST)
+    public String mark(@RequestParam("json") String json, @RequestHeader(value="HOST") String host) {
+        System.out.println("Received POST request:" + json);
+        DatabaseHandler.processMarkRequest(decodeJson(json), host);
+
+        return null;
+    }
 
   @Bean
   public static DataSource dataSource() throws SQLException {
@@ -91,4 +114,13 @@ public class Main {
     }
   }
 
+    private static Map<Integer, Article> decodeJson(String input) {
+        try {
+            HashMap<Integer, Article> request = new HashMap<>();
+            // TODO : decode json
+            return request;
+        } catch (Exception e) {
+            return null;
+        }
+    }
 }

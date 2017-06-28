@@ -1,5 +1,7 @@
 package Database;
 
+import DataClasses.*;
+
 import java.util.*;
 
 public class DatabaseHandler {
@@ -30,6 +32,16 @@ public class DatabaseHandler {
     // will return <found title length> / <title length>
     public static float[] searchTitle(String[] title) {
         return null;
+    }
+
+    public static String processCrawlRequest(Map<Integer, Article> request, String domain) {
+
+        return "";
+    }
+
+    public static String processMarkRequest(Map<Integer, Article> request, String domain) {
+
+        return "";
     }
 
 }
