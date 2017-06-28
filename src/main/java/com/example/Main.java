@@ -106,7 +106,7 @@ public class Main {
         System.out.println("Received POST request from:" + host);
         String decodedData = decodeUrl(json);
         System.out.println("received data : " + decodedData);
-        Map<Integer, Article> request = decodeJson(decodeUrl(json));
+        Map<Integer, Article> request = decodeJson(decodeUrl(json.substring(0, json.length() - 1)));
         DatabaseHandler.processCrawlRequest(request, host);
 
         HttpHeaders responseHeaders = new HttpHeaders();
