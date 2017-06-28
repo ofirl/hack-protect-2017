@@ -46,51 +46,51 @@ import java.util.Map;
 @SpringBootApplication
 public class Main {
 
-  @Value("${spring.datasource.url}")
-  private static String dbUrl;
+    @Value("${spring.datasource.url}")
+    private static String dbUrl;
 
-  @Autowired
-  public static DataSource dataSource;
+    @Autowired
+    public static DataSource dataSource;
 
-  public static void main(String[] args) throws Exception {
-    SpringApplication.run(Main.class, args);
-  }
-
-  @RequestMapping("/")
-  String index() {
-    return "index";
-  }
-
-  @RequestMapping("/db")
-  String db(Map<String, Object> model) {
-    try (Connection connection = dataSource.getConnection()) {
-      Statement stmt = connection.createStatement();
-      stmt.executeUpdate("CREATE TABLE IF NOT EXISTS ticks (tick timestamp)");
-      stmt.executeUpdate("INSERT INTO ticks VALUES (now())");
-      ResultSet rs = stmt.executeQuery("SELECT tick FROM ticks");
-
-      ArrayList<String> output = new ArrayList<String>();
-      while (rs.next()) {
-        output.add("Read from DB: " + rs.getTimestamp("tick"));
-      }
-
-      model.put("records", output);
-      return "db";
-    } catch (Exception e) {
-      model.put("message", e.getMessage());
-      return "error";
+    public static void main(String[] args) throws Exception {
+        SpringApplication.run(Main.class, args);
     }
-  }
+
+    @RequestMapping("/")
+    String index() {
+        return "index";
+    }
+
+    @RequestMapping("/db")
+    String db(Map<String, Object> model) {
+        try (Connection connection = dataSource.getConnection()) {
+            Statement stmt = connection.createStatement();
+            stmt.executeUpdate("CREATE TABLE IF NOT EXISTS ticks (tick timestamp)");
+            stmt.executeUpdate("INSERT INTO ticks VALUES (now())");
+            ResultSet rs = stmt.executeQuery("SELECT tick FROM ticks");
+
+            ArrayList<String> output = new ArrayList<String>();
+            while (rs.next()) {
+                output.add("Read from DB: " + rs.getTimestamp("tick"));
+            }
+
+            model.put("records", output);
+            return "db";
+        } catch (Exception e) {
+            model.put("message", e.getMessage());
+            return "error";
+        }
+    }
 
     @RequestMapping(value = "/test", method = RequestMethod.GET)
-    String test(Map<String, Object> model, @RequestHeader(value="HOST") String host) {
+    String test(Map<String, Object> model, @RequestHeader(value = "HOST") String host) {
         System.out.println("Received GET request from:" + host);
         model.put("message", "test");
         return "test";
     }
 
     @RequestMapping(value = "/test2", method = RequestMethod.POST)
-    ResponseEntity<String> test2(Map<String, Object> model,@RequestBody String json, @RequestHeader(value="HOST") String host) {
+    ResponseEntity<String> test2(Map<String, Object> model, @RequestBody String json, @RequestHeader(value = "HOST") String host) {
         System.out.println("Received POST request:" + json);
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("Access-Control-Allow-Origin", "*");
@@ -101,7 +101,7 @@ public class Main {
     }
 
     @RequestMapping(value = "/crawl", method = RequestMethod.POST)
-    public ResponseEntity<String> crawl(@RequestBody String json, @RequestHeader(value="HOST") String host) {
+    public ResponseEntity<String> crawl(@RequestBody String json, @RequestHeader(value = "HOST") String host) {
         System.out.println("Received POST request:" + json);
         System.out.println("Received POST request from:" + host);
         Map<Integer, Article> request = decodeJson(decodeUrl(json));
@@ -114,7 +114,7 @@ public class Main {
     }
 
     @RequestMapping(value = "/mark", method = RequestMethod.POST)
-    public String mark(@RequestParam("json") String json, @RequestHeader(value="HOST") String host) throws SQLException {
+    public String mark(@RequestParam("json") String json, @RequestHeader(value = "HOST") String host) throws SQLException {
         System.out.println("Received POST request:" + json);
         System.out.println("Received POST request from:" + host);
         DatabaseHandler.processMarkRequest(decodeJson(json).get(0), host);
@@ -122,16 +122,16 @@ public class Main {
         return null;
     }
 
-  @Bean
-  public static DataSource dataSource() throws SQLException {
-    if (dbUrl == null || dbUrl.isEmpty()) {
-      return new HikariDataSource();
-    } else {
-      HikariConfig config = new HikariConfig();
-      config.setJdbcUrl(dbUrl);
-      return new HikariDataSource(config);
+    @Bean
+    public static DataSource dataSource() throws SQLException {
+        if (dbUrl == null || dbUrl.isEmpty()) {
+            return new HikariDataSource();
+        } else {
+            HikariConfig config = new HikariConfig();
+            config.setJdbcUrl(dbUrl);
+            return new HikariDataSource(config);
+        }
     }
-  }
 
     // input = 3;headline1;headline2;headline3;
     private static Map<Integer, Article> decodeJson(String input) {
@@ -162,8 +162,8 @@ public class Main {
     private static String decodeUrl(String input) {
         try {
             return java.net.URLDecoder.decode(input, "UTF-8");
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             return "";
         }
+    }
 }
