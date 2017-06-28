@@ -101,13 +101,16 @@ public class Main {
     }
 
     @RequestMapping(value = "/crawl", method = RequestMethod.POST)
-    public String crawl(@RequestBody String json, @RequestHeader(value="HOST") String host) {
+    public ResponseEntity<String> crawl(@RequestBody String json, @RequestHeader(value="HOST") String host) {
         System.out.println("Received POST request:" + json);
         System.out.println("Received POST request from:" + host);
         Map<Integer, Article> request = decodeJson(json);
         DatabaseHandler.processCrawlRequest(request, host);
 
-        return null;
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.set("Access-Control-Allow-Origin", "*");
+        // TODO : change to actual answer
+        return new ResponseEntity<String>("Hello World", responseHeaders, HttpStatus.CREATED);
     }
 
     @RequestMapping(value = "/mark", method = RequestMethod.POST)
