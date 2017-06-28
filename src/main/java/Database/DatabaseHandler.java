@@ -45,15 +45,15 @@ public class DatabaseHandler {
         SqlHandler.insert("headlines_sites", values);
     }
 
-    public static int getTitleId(String title) {
-        // TODO : return the actual id
-        SqlHandler.select("Titles", new String[] {"id"}, "");
-
-        return 1;
+    public static int getTitleId(String title) throws SQLException {
+        ResultSet rs = SqlHandler.select("Titles", new String[] {"id"}, "headline = " + title);
+        rs.next();
+        return rs.getInt("id");
     }
 
     public static HeadlineSites getHeadlineSiteDetails(int id) {
         // TODO : do...
+        HeadlineSites headline = new HeadlineSites();
         return new HeadlineSites() {};
     }
 
@@ -72,7 +72,7 @@ public class DatabaseHandler {
         double max = 0;
         int id;
         while(rs.next()) {
-            String[] dbTitle = (String[]) rs.getArray("headline").getArray();
+            String[] dbTitle = rs.getString("headline").split(" ");
             int index = 0;
             for (int i = 0; i < title.length; i++) {
                 if (dbTitle[i].equals(title[index]))
