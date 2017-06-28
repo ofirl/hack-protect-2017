@@ -17,6 +17,7 @@ public class SqlHandler {
       } catch (Exception e) {
 
       }
+
     }
 
     public static void insert(String table, Map<String, String> values) {
