@@ -21,7 +21,7 @@ public class SqlHandler {
     }
 
     public static void insert(String table, Map<String, String> values) {
-        try (Connection connection = Main.dataSource().getConnection()) {
+        try (Connection connection = Main.dataSource.getConnection()) {
             System.out.println("insert started");
             Statement stmt = connection.createStatement();
             String tcolumns = "(";

@@ -50,7 +50,7 @@ public class Main {
     private static String dbUrl;
 
     @Autowired
-    public static DataSource dataSource;
+    public static DataSource dataSource = dataSource();
 
     public static void main(String[] args) throws Exception {
         SpringApplication.run(Main.class, args);
@@ -125,13 +125,19 @@ public class Main {
     }
 
     @Bean
-    public static DataSource dataSource() throws SQLException {
-        if (dbUrl == null || dbUrl.isEmpty()) {
-            return new HikariDataSource();
-        } else {
-            HikariConfig config = new HikariConfig();
-            config.setJdbcUrl(dbUrl);
-            return new HikariDataSource(config);
+    public static DataSource dataSource() {
+        try {
+            if (dbUrl == null || dbUrl.isEmpty()) {
+                return new HikariDataSource();
+            } else {
+                HikariConfig config = new HikariConfig();
+                config.setJdbcUrl(dbUrl);
+                return new HikariDataSource(config);
+            }
+        }
+        catch (Exception e) {
+            System.out.println("db is wrong... no connection...");
+            return null;
         }
     }
 
