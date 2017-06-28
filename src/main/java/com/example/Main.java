@@ -90,6 +90,7 @@ public class Main {
     @RequestMapping(value = "/crawl", method = RequestMethod.POST)
     public String crawl(@RequestParam("json") String json, @RequestHeader(value="HOST") String host) {
         System.out.println("Received POST request:" + json);
+        System.out.println("Received POST request from:" + host);
         DatabaseHandler.processCrawlRequest(decodeJson(json), host);
 
         return null;
@@ -98,6 +99,7 @@ public class Main {
     @RequestMapping(value = "/mark", method = RequestMethod.POST)
     public String mark(@RequestParam("json") String json, @RequestHeader(value="HOST") String host) {
         System.out.println("Received POST request:" + json);
+        System.out.println("Received POST request from:" + host);
         DatabaseHandler.processMarkRequest(decodeJson(json), host);
 
         return null;
