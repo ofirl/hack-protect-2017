@@ -26,10 +26,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.sql.DataSource;
 import java.io.Console;
@@ -41,7 +38,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-@Controller
+@RestController
 @SpringBootApplication
 public class Main {
 
@@ -81,15 +78,17 @@ public class Main {
     }
   }
 
-    @RequestMapping("/test")
-    String test(Map<String, Object> model) {
-      model.put("message", "test");
-      return "test";
+    @RequestMapping(value = "/test", method = RequestMethod.GET)
+    String test(Map<String, Object> model, @RequestHeader(value="HOST") String host) {
+        System.out.println("Received POST request from:" + host);
+        model.put("message", "test");
+        return "test";
     }
 
     @RequestMapping(value = "/crawl", method = RequestMethod.POST)
     public String crawl(@RequestParam("json") String json, @RequestHeader(value="HOST") String host) {
         System.out.println("Received POST request:" + json);
+        System.out.println("Received POST request from:" + host);
         DatabaseHandler.processCrawlRequest(decodeJson(json), host);
 
         return null;
@@ -98,7 +97,8 @@ public class Main {
     @RequestMapping(value = "/mark", method = RequestMethod.POST)
     public String mark(@RequestParam("json") String json, @RequestHeader(value="HOST") String host) {
         System.out.println("Received POST request:" + json);
-        DatabaseHandler.processMarkRequest(decodeJson(json), host);
+        System.out.println("Received POST request from:" + host);
+        DatabaseHandler.processMarkRequest(decodeJson(json).get(0), host);
 
         return null;
     }
