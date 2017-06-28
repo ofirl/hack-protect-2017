@@ -3,19 +3,19 @@ package Database;
 import java.util.*;
 
 public class SqlHandler {
-    public void upadte(String table, Dictionary<String, String> values, String condition) {
+    public static void upadte(String table, Map<String, String> values, String condition) {
 
     }
 
-    public void insert(String table, Dictionary<String, String> values) {
+    public static void insert(String table, Map<String, String> values) {
 
     }
 
-    public void delete(String table, String condition) {
+    public static void delete(String table, String condition) {
 
     }
 
-    public void select(String table, List<String> fields, String condition) {
+    public static void select(String table, String[] fields, String condition) {
 
     }
 }
