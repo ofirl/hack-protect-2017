@@ -33,11 +33,11 @@ public class DatabaseHandler {
 
     // will search the db for titles with the same words in the same order
     // will return <found title length> / <title length>
-    public static Map<String,Double> searchTitle(String[] title) throws SQLException {
-        HashMap<String, Double> values = new HashMap<>();
+    public static Map<Integer,Double> searchTitle(String[] title) throws SQLException {
+        HashMap<Integer, Double> values = new HashMap<>();
         ResultSet rs = SqlHandler.select("Titles", new String[]{"id", "headline"}, "");
         double max = 0;
-        String id = "";
+        int id;
         while(rs.next()) {
             String[] dbTitle = (String[]) rs.getArray("headline").getArray();
             int index = 0;
@@ -48,9 +48,9 @@ public class DatabaseHandler {
             double reliability = index / title.length;
             if (max < reliability) {
                 max = reliability;
-                id = rs.getString("id");
+                id = rs.getInt("id");
             }
-            values.put(rs.getString("id"), reliability);
+            values.put(rs.getInt("id"), reliability);
         }
         return values;
     }
