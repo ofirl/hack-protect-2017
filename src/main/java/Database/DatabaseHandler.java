@@ -1,18 +1,33 @@
 package Database;
 
 import DataClasses.*;
+import Stemmer.*;
 
 import java.util.*;
 
 public class DatabaseHandler {
 
+    public static double minIdentityScore = 0.5;
+    public static double minReliabilityScore = 0.5;
+
     public static void insertTitle(String title, String subTitle, String Url) {
         HashMap<String, String> values = new HashMap<>();
-        values.put("title", title);
-        values.put("subtitle", subTitle);
-        values.put("url", Url);
+        String headlineValue = "";
+        String[] headlineArray = title.split(" ");
+        List<String> test = new ArrayList<>();
 
-        SqlHandler.insert("Titles", values);
+
+        values.put("headline", title);
+        values.put("sub_headline", subTitle);
+        // add to db
+        SqlHandler.insert("headlines", values);
+
+        values.clear();
+        // TODO : get headline id
+        values.put("headline_id", String.valueOf(1));
+        values.put("domain", Url);
+        // add to db
+        SqlHandler.insert("headlines_sites", values);
     }
 
     public static int getTitleId(String title) {
@@ -22,9 +37,15 @@ public class DatabaseHandler {
         return 1;
     }
 
-    public static void updateTitle(int id) {
+    public static HeadlineSites getHeadlineSiteDetails(int id) {
+        // TODO : do...
+        return new HeadlineSites() {};
+    }
+
+    public static void updateTitle(int id, int reportersCount) {
         String condition = "id=" + id;
         HashMap<String, String> values = new HashMap<>();
+        values.put("reporters_count", String.valueOf(reportersCount));
         SqlHandler.upadte("Titles", values, condition);
     }
 
@@ -34,13 +55,52 @@ public class DatabaseHandler {
         return null;
     }
 
-    public static String processCrawlRequest(Map<Integer, Article> request, String domain) {
-
-        return "";
+    public static double[] searchTitle(String[] title, boolean maxOnly) {
+        return new double[] { 3 };
     }
 
-    public static String processMarkRequest(Map<Integer, Article> request, String domain) {
-        //test
+    public static String processCrawlRequest(Map<Integer, Article> request, String domain) {
+        ArrayList<Integer> suspicious = new ArrayList<>();
+
+        for (Integer key:
+             request.keySet()){
+            Article article = request.get((key));
+
+            article.headline = StemmerAPI.cleanHeadline(article.headline);
+            article.sub_headline = StemmerAPI.cleanHeadline(article.sub_headline);
+
+            double[] similarSearch = searchTitle(article.headline.split(" "), true);
+            if (similarSearch[0] < minReliabilityScore) {
+                suspicious.add(key);
+            }
+            else {
+                insertTitle(article.headline, article.sub_headline, domain);
+            }
+        }
+        
+        String output = "";
+        for (Integer i :
+                suspicious) {
+            output += String.valueOf(i);
+        }
+
+        return output;
+    }
+
+    public static String processMarkRequest(Article request, String domain) {
+        request.headline = StemmerAPI.cleanHeadline(request.headline);
+        request.sub_headline = StemmerAPI.cleanHeadline(request.sub_headline);
+
+        double[] similarSearch = searchTitle(request.headline.split(" "), true);
+        if (similarSearch[0] > minIdentityScore) {
+            int similarHeadline = (int)similarSearch[1];
+            int reporters = getHeadlineSiteDetails(similarHeadline).reportersCount + 1;
+            updateTitle(similarHeadline, reporters);
+        }
+        else {
+            insertTitle(request.headline, request.sub_headline, domain);
+        }
+
         return "";
     }
 

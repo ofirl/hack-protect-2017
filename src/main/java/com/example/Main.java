@@ -100,7 +100,7 @@ public class Main {
     public String mark(@RequestParam("json") String json, @RequestHeader(value="HOST") String host) {
         System.out.println("Received POST request:" + json);
         System.out.println("Received POST request from:" + host);
-        DatabaseHandler.processMarkRequest(decodeJson(json), host);
+        DatabaseHandler.processMarkRequest(decodeJson(json).get(0), host);
 
         return null;
     }
