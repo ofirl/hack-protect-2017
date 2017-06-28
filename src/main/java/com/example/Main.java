@@ -89,7 +89,7 @@ public class Main {
     }
 
     @RequestMapping(value = "/test2", method = RequestMethod.POST)
-    ResponseEntity<String> test2(Map<String, Object> model,@RequestParam("json") String json, @RequestHeader(value="HOST") String host) {
+    ResponseEntity<String> test2(Map<String, Object> model,@RequestBody String json, @RequestHeader(value="HOST") String host) {
         System.out.println("Received POST request:" + json);
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("Access-Control-Allow-Origin", "*");
