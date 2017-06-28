@@ -79,14 +79,14 @@ public class Main {
   }
 
     @RequestMapping(value = "/test", method = RequestMethod.GET)
-    String test(Map<String, Object> model, @RequestHeader(value="FROM") String host) {
+    String test(Map<String, Object> model, @RequestHeader(value="HOST") String host) {
         System.out.println("Received GET request from:" + host);
         model.put("message", "test");
         return "test";
     }
 
     @RequestMapping(value = "/test2", method = RequestMethod.POST)
-    String test2(Map<String, Object> model, @RequestParam("json") String json, @RequestHeader(value="FROM") String host) {
+    String test2(Map<String, Object> model, @RequestParam("json") String json, @RequestHeader(value="HOST") String host) {
         System.out.println("Received POST request:" + json);
         System.out.println("Received POST request from:" + host);
         model.put("message", "test");
@@ -94,7 +94,7 @@ public class Main {
     }
 
     @RequestMapping(value = "/crawl", method = RequestMethod.POST)
-    public String crawl(@RequestParam("json") String json, @RequestHeader(value="FROM") String host) {
+    public String crawl(@RequestParam("json") String json, @RequestHeader(value="HOST") String host) {
         System.out.println("Received POST request:" + json);
         System.out.println("Received POST request from:" + host);
         DatabaseHandler.processCrawlRequest(decodeJson(json), host);
