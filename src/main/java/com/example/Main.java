@@ -85,6 +85,13 @@ public class Main {
         return "test";
     }
 
+    @RequestMapping(value = "/test", method = RequestMethod.POST)
+    String test2(Map<String, Object> model, @RequestHeader(value="HOST") String host) {
+        System.out.println("Received POST request from:" + host);
+        model.put("message", "test");
+        return "test";
+    }
+
     @RequestMapping(value = "/crawl", method = RequestMethod.POST)
     public String crawl(@RequestParam("json") String json, @RequestHeader(value="HOST") String host) {
         System.out.println("Received POST request:" + json);
