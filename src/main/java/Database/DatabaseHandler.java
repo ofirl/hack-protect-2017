@@ -14,6 +14,7 @@ public class DatabaseHandler {
     public static double minReliabilityScore = 0.5;
 
     public static void insertTitle(String title, String Url) {
+        System.out.println("inserting " + title + " : " + Url);
         HashMap<String, String> values = new HashMap<>();
         String headlineValue = "{";
         String[] headlineArray = title.split(" ");
