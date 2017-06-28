@@ -3,7 +3,7 @@ package Stemmer;
 public class StemmerAPI {
 
     
-    	public static String[] removStopWords (String[] s, String[] stopWords){
+    	public static String[] removeStopWords (String[] s, String[] stopWords){
     		int left= s.length;	
     		for (int i=0; i<s.length; i++){
     			for (int j=0; j< stopWords[i].length(); j++){
@@ -22,7 +22,7 @@ public class StemmerAPI {
     	public static String parseString (String st, String[] stopWords){
     		String[] stSplited= st.split(" ");
     		String stFinal = "";
-    		String[] newS= removStopWords(stSplited, stopWords);
+    		String[] newS= removeStopWords(stSplited, stopWords);
     		Stemmer s= new Stemmer();
     		for (int i=0; i<stSplited.length; i++){
     			char[] c= stSplited[i].toCharArray();
