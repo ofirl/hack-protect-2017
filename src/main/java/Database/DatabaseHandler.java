@@ -40,7 +40,7 @@ public class DatabaseHandler {
     }
 
     public static String processMarkRequest(Map<Integer, Article> request, String domain) {
-
+        //test
         return "";
     }
 
