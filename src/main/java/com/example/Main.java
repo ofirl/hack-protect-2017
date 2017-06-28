@@ -104,6 +104,8 @@ public class Main {
     public ResponseEntity<String> crawl(@RequestBody String json, @RequestHeader(value = "HOST") String host) {
         System.out.println("Received POST request:" + json);
         System.out.println("Received POST request from:" + host);
+        String decodedData = decodeUrl(json);
+        System.out.println("received data : " + decodedData);
         Map<Integer, Article> request = decodeJson(decodeUrl(json));
         DatabaseHandler.processCrawlRequest(request, host);
 
