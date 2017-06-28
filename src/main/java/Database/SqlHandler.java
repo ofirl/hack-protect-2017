@@ -56,7 +56,9 @@ public class SqlHandler {
             	columns = columns + field + ",";
             columns = columns.substring(0,columns.length()-1);
             ResultSet rs = stmt.executeQuery("SELECT" + columns + "FROM" + table + "WHERE" + condition);
+            return rs;
           } catch (Exception e) {
+            return null;
 
           }
     }
