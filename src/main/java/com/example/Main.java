@@ -103,7 +103,7 @@ public class Main {
     }
 
     @RequestMapping(value = "/mark", method = RequestMethod.POST)
-    public String mark(@RequestParam("json") String json, @RequestHeader(value="HOST") String host) {
+    public String mark(@RequestParam("json") String json, @RequestHeader(value="HOST") String host) throws SQLException {
         System.out.println("Received POST request:" + json);
         System.out.println("Received POST request from:" + host);
         DatabaseHandler.processMarkRequest(decodeJson(json).get(0), host);
