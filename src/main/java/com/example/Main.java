@@ -25,6 +25,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -85,12 +88,15 @@ public class Main {
         return "test";
     }
 
-    @RequestMapping(value = "/test2", method = RequestMethod.POST)
-    String test2(Map<String, Object> model, @RequestHeader(value="HOST") String host) {
+    @RequestMapping(value = "/test2", method = RequestMethod.POST, headers = )
+    ResponseEntity<String> test2(Map<String, Object> model, @RequestHeader(value="HOST") String host) {
         //System.out.println("Received POST request:" + json);
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.set("Access-Control-Allow-Origin", "*");
         System.out.println("Received POST request from:" + host);
+
         model.put("message", "test");
-        return "test";
+        return new ResponseEntity<String>("Hello World", responseHeaders, HttpStatus.CREATED);
     }
 
     @RequestMapping(value = "/crawl", method = RequestMethod.POST)
