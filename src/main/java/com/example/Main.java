@@ -17,6 +17,7 @@
 package com.example;
 
 import DataClasses.Article;
+import DataClasses.Headline;
 import Database.DatabaseHandler;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
@@ -100,10 +101,11 @@ public class Main {
     }
 
     @RequestMapping(value = "/crawl", method = RequestMethod.POST)
-    public String crawl(@RequestParam("json") String json, @RequestHeader(value="HOST") String host) {
+    public String crawl(@RequestBody String json, @RequestHeader(value="HOST") String host) {
         System.out.println("Received POST request:" + json);
         System.out.println("Received POST request from:" + host);
-        DatabaseHandler.processCrawlRequest(decodeJson(json), host);
+        Map<Integer, Article> request = decodeJson(json);
+        DatabaseHandler.processCrawlRequest(request, host);
 
         return null;
     }
@@ -128,10 +130,25 @@ public class Main {
     }
   }
 
+    // input = 3;headline1;headline2;headline3;
     private static Map<Integer, Article> decodeJson(String input) {
         try {
             HashMap<Integer, Article> request = new HashMap<>();
-            // TODO : decode json
+
+            int headlineStart = input.indexOf(';');
+            int headlineCount = Integer.valueOf(input.substring(0, headlineStart));
+
+            headlineStart++;
+            for (int i = 0; i < headlineCount; i++) {
+                int headlineEnd = input.indexOf(';', headlineStart);
+                String headline = input.substring(headlineStart, headlineEnd);
+                headlineStart = headlineEnd + 1;
+
+                Article article = new Article();
+                article.headline = headline;
+                request.put(i, article);
+            }
+
             return request;
         } catch (Exception e) {
             return null;

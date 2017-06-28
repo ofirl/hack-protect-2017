@@ -60,30 +60,63 @@ public class DatabaseHandler {
 
     // will search the db for titles with the same words in the same order
     // will return <found title length> / <title length>
-    public static Map<Integer,Double> searchTitle(String[] title) throws SQLException {
-        HashMap<Integer, Double> values = new HashMap<>();
-        ResultSet rs = SqlHandler.select("Titles", new String[]{"id", "headline"}, "");
-        double max = 0;
-        int id;
-        while(rs.next()) {
-            String[] dbTitle = rs.getString("headline").split(" ");
-            int index = 0;
-            for (int i = 0; i < title.length; i++) {
-                if (dbTitle[i].equals(title[index]))
-                    index++;
+    public static Map<Integer,Double> searchTitle(String[] title) {
+        try {
+            HashMap<Integer, Double> values = new HashMap<>();
+            // all headlines... why? change later
+            ResultSet rs = SqlHandler.select("headlines", new String[]{"id", "headline"}, ">@");
+            double max = 0;
+            int id;
+            while (rs.next()) {
+                String[] dbTitle = rs.getString("headline").split(" ");
+                int index = 0;
+                for (int i = 0; i < title.length; i++) {
+                    if (dbTitle[i].equals(title[index]))
+                        index++;
+                }
+                double reliability = index / title.length;
+                if (max < reliability) {
+                    max = reliability;
+                    id = rs.getInt("id");
+                }
+                values.put(rs.getInt("id"), reliability);
             }
-            double reliability = index / title.length;
-            if (max < reliability) {
-                max = reliability;
-                id = rs.getInt("id");
-            }
-            values.put(rs.getInt("id"), reliability);
+            return values;
         }
-        return values;
+        catch (Exception e) {
+            return null;
+        }
     }
 
-    public static double[] searchTitle(String[] title, boolean maxOnly) {
-        return new double[] { 3 };
+    public static Map<Integer,Double> searchTitle(String[] title, boolean maxOnly) {
+        try {
+            HashMap<Integer, Double> values = new HashMap<>();
+            // all headlines... why? change later
+            ResultSet rs = SqlHandler.select("headlines", new String[]{"id", "headline"}, ">@");
+            double max = 0;
+            int id = 0;
+            while (rs.next()) {
+                String[] dbTitle = rs.getString("headline").split(" ");
+                int index = 0;
+                for (int i = 0; i < title.length; i++) {
+                    if (dbTitle[i].equals(title[index]))
+                        index++;
+                }
+                double reliability = index / title.length;
+                if (max < reliability) {
+                    max = reliability;
+                    id = rs.getInt("id");
+                }
+                values.put(rs.getInt("id"), reliability);
+            }
+            values.clear();
+            values.put(0, max);
+            values.put(1, Double.valueOf(id));
+            return values;
+        }
+        catch (Exception e) {
+            return null;
+        }
     }
 
     public static String processCrawlRequest(Map<Integer, Article> request, String domain) {
@@ -95,8 +128,8 @@ public class DatabaseHandler {
 
             article.headline = StemmerAPI.cleanHeadline(article.headline);
 
-            double[] similarSearch = searchTitle(article.headline.split(" "), true);
-            if (similarSearch[0] < minReliabilityScore) {
+            Map<Integer,Double> similarSearch = searchTitle(article.headline.split(" "), true);
+            if (similarSearch != null && similarSearch.size() > 0 && similarSearch.get(0) < minReliabilityScore) {
                 suspicious.add(key);
             }
             else {
@@ -114,18 +147,21 @@ public class DatabaseHandler {
     }
 
     public static String processMarkRequest(Article request, String domain) throws SQLException{
-        request.headline = StemmerAPI.cleanHeadline(request.headline);
+        try {
+            request.headline = StemmerAPI.cleanHeadline(request.headline);
 
-        double[] similarSearch = searchTitle(request.headline.split(" "), true);
-        if (similarSearch[0] > minIdentityScore) {
-            int similarHeadline = (int)similarSearch[1];
-            int reporters = getHeadlineSiteDetails(similarHeadline).getReportersCount() + 1;
-            updateTitle(similarHeadline, reporters);
+            Map<Integer, Double> similarSearch = searchTitle(request.headline.split(" "), true);
+            if (similarSearch != null && similarSearch.size() > 0 && similarSearch.get(0) > minIdentityScore) {
+                int similarHeadline = Integer.valueOf(similarSearch.get(1).toString());
+                int reporters = getHeadlineSiteDetails(similarHeadline).getReportersCount() + 1;
+                updateTitle(similarHeadline, reporters);
+            } else {
+                insertTitle(request.headline, domain);
+            }
         }
-        else {
-            insertTitle(request.headline, domain);
-        }
+        catch (Exception e) {
 
+        }
         return "";
     }
 
