@@ -4,7 +4,7 @@ import java.util.*;
 
 public class DatabaseHandler {
 
-    public void insertTitle(String title, String subTitle, String Url) {
+    public static void insertTitle(String title, String subTitle, String Url) {
         HashMap<String, String> values = new HashMap<>();
         values.put("title", title);
         values.put("subtitle", subTitle);
@@ -13,15 +13,23 @@ public class DatabaseHandler {
         SqlHandler.insert("Titles", values);
     }
 
-    public int getTitleId(String title) {
+    public static int getTitleId(String title) {
         // TODO : return the actual id
         SqlHandler.select("Titles", new String[] {"id"}, "");
+
+        return 1;
     }
 
-    public void updateTitle(int id) {
+    public static void updateTitle(int id) {
         String condition = "WHERE id=" + id;
         HashMap<String, String> values = new HashMap<>();
         SqlHandler.upadte("Titles", values, condition);
+    }
+
+    // will search the db for titles with the same words in the same order
+    // will return <found title length> / <title length>
+    public static float[] searchTitle(String[] title) {
+        return null;
     }
 
 }
