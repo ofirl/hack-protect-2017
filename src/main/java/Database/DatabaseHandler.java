@@ -130,9 +130,11 @@ public class DatabaseHandler {
 
             Map<Integer,Double> similarSearch = searchTitle(article.headline.split(" "), true);
             if (similarSearch != null && similarSearch.size() > 0 && similarSearch.get(0) < minReliabilityScore) {
+                System.out.println(article.headline + " marked as suspicious");
                 suspicious.add(key);
             }
             else {
+                System.out.println(article.headline + " added to db");
                 insertTitle(article.headline, domain);
             }
         }

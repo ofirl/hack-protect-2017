@@ -31,9 +31,10 @@ public class SqlHandler {
             }
             tcolumns = tcolumns.substring(0,tcolumns.length()-1) + ")";
             tvalues = tvalues.substring(0,tvalues.length()-1) + ")";
+            System.out.println("INSERT INTO" + table + tcolumns + "VALUES" + tvalues);
             ResultSet rs = stmt.executeQuery("INSERT INTO" + table + tcolumns + "VALUES" + tvalues);
           } catch (Exception e) {
-
+                System.out.println(e.getMessage());
           }
 
     }
