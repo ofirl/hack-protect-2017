@@ -21,7 +21,7 @@ public class DatabaseHandler {
     }
 
     public static void updateTitle(int id) {
-        String condition = "WHERE id=" + id;
+        String condition = "id=" + id;
         HashMap<String, String> values = new HashMap<>();
         SqlHandler.upadte("Titles", values, condition);
     }

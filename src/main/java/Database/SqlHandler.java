@@ -48,7 +48,7 @@ public class SqlHandler {
 
     }
 
-    public static void select(String table, String[] fields, String condition) {
+    public static ResultSet select(String table, String[] fields, String condition) {
         try (Connection connection = Main.dataSource.getConnection()) {
             Statement stmt = connection.createStatement();
             String columns = "";
