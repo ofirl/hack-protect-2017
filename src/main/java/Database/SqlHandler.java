@@ -22,13 +22,15 @@ public class SqlHandler {
 
     public static void insert(String table, Map<String, String> values) {
         try (Connection connection = Main.dataSource.getConnection()) {
+            System.out.println("insert started");
             Statement stmt = connection.createStatement();
             String tcolumns = "(";
             String tvalues = "(";
             for(String key: values.keySet()) {
-                tcolumns = tcolumns + key + ",";
-                tvalues = tvalues + values.get(key) + ",";
+                tcolumns += key + ",";
+                tvalues += values.get(key) + ",";
             }
+            System.out.println("test print " + tcolumns + " " + tvalues);
             tcolumns = tcolumns.substring(0,tcolumns.length()-1) + ")";
             tvalues = tvalues.substring(0,tvalues.length()-1) + ")";
             System.out.println("INSERT INTO" + table + tcolumns + "VALUES" + tvalues);
