@@ -86,8 +86,8 @@ public class Main {
     }
 
     @RequestMapping(value = "/test2", method = RequestMethod.POST)
-    String test2(Map<String, Object> model, @RequestParam("json") String json, @RequestHeader(value="HOST") String host) {
-        System.out.println("Received POST request:" + json);
+    String test2(Map<String, Object> model, @RequestHeader(value="HOST") String host) {
+        //System.out.println("Received POST request:" + json);
         System.out.println("Received POST request from:" + host);
         model.put("message", "test");
         return "test";
