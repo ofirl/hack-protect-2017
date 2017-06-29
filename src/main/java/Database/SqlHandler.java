@@ -7,7 +7,7 @@ import java.sql.*;
 
 public class SqlHandler {
     public static void upadte(String table, Map<String, String> values, String condition) {
-    try (Connection connection = Main.dataSource.getConnection()) {
+    try (Connection connection = Main.getDataSource().getConnection()) {
         Statement stmt = connection.createStatement();
         String setValues = "";
         for(String key: values.keySet())
@@ -21,7 +21,7 @@ public class SqlHandler {
     }
 
     public static void insert(String table, Map<String, String> values) {
-        try (Connection connection = Main.dataSource.getConnection()) {
+        try (Connection connection = Main.getDataSource().getConnection()) {
             System.out.println("insert started");
             Statement stmt = connection.createStatement();
             String tcolumns = "(";
@@ -42,7 +42,7 @@ public class SqlHandler {
     }
 
     public static void delete(String table, String condition) {
-        try (Connection connection = Main.dataSource.getConnection()) {
+        try (Connection connection = Main.getDataSource().getConnection()) {
             Statement stmt = connection.createStatement();
             ResultSet rs = stmt.executeQuery("DELETE FROM" + table + "WHERE" + condition);
           } catch (Exception e) {
@@ -52,7 +52,7 @@ public class SqlHandler {
     }
 
     public static ResultSet select(String table, String[] fields, String condition) {
-        try (Connection connection = Main.dataSource.getConnection()) {
+        try (Connection connection = Main.getDataSource().getConnection()) {
             Statement stmt = connection.createStatement();
             String columns = "";
             for (String field : fields)

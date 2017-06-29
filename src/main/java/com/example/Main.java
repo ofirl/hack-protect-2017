@@ -47,10 +47,10 @@ import java.util.Map;
 public class Main {
 
     @Value("${spring.datasource.url}")
-    private static String dbUrl;
+    private String dbUrl;
 
     @Autowired
-    public static DataSource dataSource = dataSource();
+    public DataSource dataSource;
 
     public static void main(String[] args) throws Exception {
         SpringApplication.run(Main.class, args);
@@ -124,10 +124,14 @@ public class Main {
         return null;
     }
 
+    public static DataSource getDataSource() {
+        return new Main().dataSource;
+    }
+
     @Bean
-    public static DataSource dataSource() {
+    public DataSource dataSource() {
         try {
-            dbUrl = "postgres://pvdsibwsjjhpan:8882b65526eec372cdef89e09d07a6e914c35f56e1a96657a7e2d5c9261293d6@ec2-54-228-255-234.eu-west-1.compute.amazonaws.com:5432/d5chvem3nl0q75";
+            //dbUrl = "postgres://pvdsibwsjjhpan:8882b65526eec372cdef89e09d07a6e914c35f56e1a96657a7e2d5c9261293d6@ec2-54-228-255-234.eu-west-1.compute.amazonaws.com:5432/d5chvem3nl0q75";
             if (dbUrl == null || dbUrl.isEmpty()) {
                 return new HikariDataSource();
             } else {
