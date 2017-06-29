@@ -50,7 +50,7 @@ public class Main {
     private String dbUrl;
 
     @Autowired
-    public DataSource dataSource;
+    private DataSource dataSource;
 
     public static void main(String[] args) throws Exception {
         SpringApplication.run(Main.class, args);
@@ -125,7 +125,11 @@ public class Main {
     }
 
     public static DataSource getDataSource() {
-        return new Main().dataSource;
+        return new Main().getSource();
+    }
+
+    public DataSource getSource() {
+        return dataSource;
     }
 
     @Bean
